@@ -1,0 +1,30 @@
+frames 100
+basename test
+push
+move 250 250 0
+scale 2 2 2 grow
+sphere 0 0 0 20
+pop
+push
+move 250 250 0
+rotate x 30
+rotate z 50
+rotate x 360 spinny1
+torus 0 0 0 20 180
+pop
+push
+move 250 250 0
+rotate x 20
+rotate x 360 spinny1
+torus 0 0 0 20 180
+pop
+push
+move 250 250 0
+rotate x 30
+rotate z -50
+rotate x 360 spinny2
+torus 0 0 0 20 180
+vary grow 0 49 0.5 1
+vary grow 50 99 1 0.5
+vary spinny1 0 99 0 1
+vary spinny2 0 99 0 1

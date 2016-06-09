@@ -1,0 +1,7 @@
+push
+move 200 300 0
+rotate x 30
+rotate y 20
+box -100 -100 -100 200 200 200
+pop
+display

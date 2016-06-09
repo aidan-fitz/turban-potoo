@@ -1,3 +1,9 @@
+# Image file types
+*.ppm
+*.jpg
+*.gif
+*.png
+
 # Misc
 \#*\#
 *~
