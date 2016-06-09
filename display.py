@@ -1,16 +1,22 @@
 from subprocess import Popen, PIPE
 from os import remove
 
-#constants
+# CONSTANTS
+# ---------
+
 XRES = 500
 YRES = 500
-MAX_COLOR = 255
-RED = 0
-GREEN = 1
-BLUE = 2
+MAX_COLOR = 255 # 0–255
+DEFAULT_COLOR = [0, 0, 0, float("-Inf")]
+
+# the order of indices in a color represented by a list:
+RED     = 0
+GREEN   = 1
+BLUE    = 2
 Z_INDEX = 3
 
-DEFAULT_COLOR = [0, 0, 0, float("-Inf")]
+# FUNCTIONS
+# ---------
 
 def new_screen( width = XRES, height = YRES ):
     screen = []
@@ -56,7 +62,7 @@ def save_extension( screen, fname ):
     save_ppm( screen, ppm_name )
     p = Popen( ['convert', ppm_name, fname ], stdin=PIPE, stdout = PIPE )
     p.communicate()
-    # Keep the temp file for debug purposes
+    # Keep the temp file for debugging
     remove(ppm_name)
 
 def display( screen ):
