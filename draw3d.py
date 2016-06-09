@@ -1,5 +1,5 @@
 from draw import *
-from math import ceil
+from math import ceil, sqrt
 
 class BoxVertices:
     def __init__(self, x, y, z, width, height, depth):
@@ -221,6 +221,15 @@ def draw_triangle(matrix, index, screen, color, fill=False):
                 x0 += dx0
                 x1 += dx1_lower if y <= middle[1] else dx1_upper
 
+def centroid(matrix, index):
+    # Shorthand for the three vertices
+    p0 = matrix[index]
+    p1 = matrix[index + 1]
+    p2 = matrix[index + 2]
+
+    # Average of the 3 points
+    return [(p0[i] + p1[i] + p2[i])/3 for i in range(len(p0))]
+
 def surface_normal(matrix, index):
     # Shorthand for the three vertices
     p0 = matrix[index]
@@ -235,6 +244,13 @@ def surface_normal(matrix, index):
     #return [c / 2 for c in cross_product(a, b)]
     # But to keep it simple, we'll return the cross product
     return cross_product(a, b)
+
+def normalize(a):
+    mag = magnitude(a)
+    return [x/mag for x in a]
+
+def magnitude(a):
+    return sqrt(sum([x*x for x in a]))
 
 def cross_product(a, b):
     if len(a) == len(b) == 3:
