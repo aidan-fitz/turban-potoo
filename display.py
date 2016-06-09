@@ -6,7 +6,7 @@ from os import remove
 
 XRES = 500
 YRES = 500
-MAX_COLOR = 255 # 0–255
+MAX_COLOR = 255 # 0-255
 DEFAULT_COLOR = [0, 0, 0, float("-Inf")]
 
 # the order of indices in a color represented by a list:
