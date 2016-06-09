@@ -214,10 +214,13 @@ def draw_triangle(matrix, index, screen, color, fill=False):
 
             fill_color = [e/2 for e in color]
 
+            # Temporary: Use z-coordinate of centroid for z-buffering
+            z = centroid(matrix, index)[2]
+
             # draw horizontal line segments
             for y in range(int(bottom[1]), int(ceil(top[1]))):
                 y0 = y1 = y
-                draw_line(screen, x0, y0, x1, y1, fill_color)
+                draw_line(screen, x0, y0, z, x1, y1, z, fill_color)
                 x0 += dx0
                 x1 += dx1_lower if y <= middle[1] else dx1_upper
 

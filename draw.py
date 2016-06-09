@@ -81,23 +81,24 @@ def draw_line( screen, x0, y0, z0, x1, y1, z1, color ):
         tmp = y0
         y0 = y1
         y1 = tmp
-    
+
     if dx == 0:
         y = y0
         while y <= y1:
-            plot(screen, color, x0, y)
+            # TODO: Get the real z-coordinate
+            plot(screen, color, x0, y, z0)
             y = y + 1
     elif dy == 0:
         x = x0
         while x <= x1:
-            plot(screen, color, x, y0)
+            plot(screen, color, x, y0, z0)
             x = x + 1
     elif dy < 0:
         d = 0
         x = x0
         y = y0
         while x <= x1:
-            plot(screen, color, x, y)
+            plot(screen, color, x, y, z0)
             if d > 0:
                 y = y - 1
                 d = d - dx
@@ -108,7 +109,7 @@ def draw_line( screen, x0, y0, z0, x1, y1, z1, color ):
         x = x0
         y = y0
         while y <= y1:
-            plot(screen, color, x, y)
+            plot(screen, color, x, y, z0)
             if d > 0:
                 x = x - 1
                 d = d - dy
@@ -119,7 +120,7 @@ def draw_line( screen, x0, y0, z0, x1, y1, z1, color ):
         x = x0
         y = y0
         while x <= x1:
-            plot(screen, color, x, y)
+            plot(screen, color, x, y, z0)
             if d > 0:
                 y = y + 1
                 d = d - dx
@@ -130,7 +131,7 @@ def draw_line( screen, x0, y0, z0, x1, y1, z1, color ):
         x = x0
         y = y0
         while y <= y1:
-            plot(screen, color, x, y)
+            plot(screen, color, x, y, z0)
             if d > 0:
                 x = x + 1
                 d = d - dy
