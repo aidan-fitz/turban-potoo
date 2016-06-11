@@ -35,5 +35,5 @@ def normalize(a):
 Returns the projection of a onto b
 '''
 def project(a, b):
-    f = dot(a, b) / dot(b, b)
+    f = dot_product(a, b) / dot_product(b, b)
     return [x * f for x in b]
