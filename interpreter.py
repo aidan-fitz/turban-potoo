@@ -3,7 +3,7 @@ from display import *
 from matrix import *
 from matrix import matrix_mult as mmult
 from draw import *
-from draw3d import *
+from shapes import *
 from stack import Stack
 from animate import *
 
