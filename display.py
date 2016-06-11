@@ -30,12 +30,12 @@ def new_screen( width = XRES, height = YRES ):
     return screen
 
 def plot( screen, color, x, y, z=0 ):
-    print x, y
+    #print x, y
     x = int(x)
     y = int(y)
     newy = YRES - 1 - y
     # z-buffering
-    print x, newy, screen[x][newy]
+    #print x, newy, screen[x][newy]
     oldz = screen[x][newy][Z_INDEX]
     if ( x >= 0 and x < XRES and newy >= 0 and newy < YRES and z >= oldz ):
         screen[x][newy] = color[:] + [z]
