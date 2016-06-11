@@ -2,7 +2,6 @@ from display import *
 from matrix import *
 from math import *
 
-from barycentric import *
 from linalg import *
 
 def draw_line(screen, x0, y0, z0, x1, y1, z1, color):
