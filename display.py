@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from subprocess import Popen, PIPE
 from os import remove
 
