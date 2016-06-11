@@ -69,6 +69,9 @@ def add_point( matrix, x, y, z=0 ):
     matrix.append( [x, y, z, 1] )
 
 
+from barycentric import *
+from linalg import dot_product
+
 def draw_line( screen, x0, y0, z0, x1, y1, z1, color ):
     dx = x1 - x0
     dy = y1 - y0
@@ -82,23 +85,25 @@ def draw_line( screen, x0, y0, z0, x1, y1, z1, color ):
         y0 = y1
         y1 = tmp
 
+    z = lambda x,y: dot_product([z0, z1], barycentric([[x0, y0], [x1, y1]], [x, y]))
+
     if dx == 0:
         y = y0
         while y <= y1:
             # TODO: Get the real z-coordinate
-            plot(screen, color, x0, y, z0)
+            plot(screen, color, x0, y, z(x, y))
             y = y + 1
     elif dy == 0:
         x = x0
         while x <= x1:
-            plot(screen, color, x, y0, z0)
+            plot(screen, color, x, y0, z(x, y))
             x = x + 1
     elif dy < 0:
         d = 0
         x = x0
         y = y0
         while x <= x1:
-            plot(screen, color, x, y, z0)
+            plot(screen, color, x, y, z(x, y))
             if d > 0:
                 y = y - 1
                 d = d - dx
@@ -109,7 +114,7 @@ def draw_line( screen, x0, y0, z0, x1, y1, z1, color ):
         x = x0
         y = y0
         while y <= y1:
-            plot(screen, color, x, y, z0)
+            plot(screen, color, x, y, z(x, y))
             if d > 0:
                 x = x - 1
                 d = d - dy
@@ -120,7 +125,7 @@ def draw_line( screen, x0, y0, z0, x1, y1, z1, color ):
         x = x0
         y = y0
         while x <= x1:
-            plot(screen, color, x, y, z0)
+            plot(screen, color, x, y, z(x, y))
             if d > 0:
                 y = y + 1
                 d = d - dx
@@ -131,7 +136,7 @@ def draw_line( screen, x0, y0, z0, x1, y1, z1, color ):
         x = x0
         y = y0
         while y <= y1:
-            plot(screen, color, x, y, z0)
+            plot(screen, color, x, y, z(x, y))
             if d > 0:
                 x = x + 1
                 d = d - dy
