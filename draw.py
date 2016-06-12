@@ -147,7 +147,15 @@ def draw_triangle(matrix, index, screen, color, fill=False):
                 # to get the leftmost and rightmost points
                 foo = sorted([p for p in L if p[1] == y])
                 #print foo
-                draw_line(screen, foo[0], foo[-1], color)
+                #if not foo:
+                #    print 'foo is empty ----------------------------------------------------------'
+                #    print y
+                if len(foo) == 1:
+                #    print 'len(foo) == 1 ---------------------------------------------------------'
+                #    print y
+                    plot(screen, color, foo[0][0], foo[0][1], foo[0][2])
+                if len(foo) >= 2:
+                    draw_line(screen, foo[0], foo[-1], color)
         else:
             # Just draw the borders
             draw_lines(edges, screen, color)
