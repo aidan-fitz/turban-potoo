@@ -8,8 +8,7 @@ def draw_line(screen, x0, y0, z0, x1, y1, z1, color):
     plotxyz = lambda x, y, z: plot(screen, color, x, y, z)
     bresenham(x0, y0, z0, x1, y1, z1, plotxyz)
 
-def generate_line(x0, y0, z0, x1, y1, z1):
-    L = []
+def generate_line(x0, y0, z0, x1, y1, z1, L = []):
     f = lambda x, y, z: L.append( (x, y, z) )
     bresenham(x0, y0, z0, x1, y1, z1, f)
     return L
