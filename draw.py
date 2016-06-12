@@ -5,11 +5,21 @@ from math import *
 from linalg import *
 
 def draw_line(screen, x0, y0, z0, x1, y1, z1, color):
+    plotxyz = lambda x, y, z: plot(screen, color, x, y, z)
+    bresenham(x0, y0, z0, x1, y1, z1, plotxyz)
+
+def generate_line(x0, y0, z0, x1, y1, z1):
+    L = []
+    f = lambda x, y, z: L.append( (x, y, z) )
+    bresenham(x0, y0, z0, x1, y1, z1, f)
+    return L
+
+def bresenham(x0, y0, z0, x1, y1, z1, do_something):
     dx = x1 - x0
     dy = y1 - y0
 
     if dx + dy < 0:
-        draw_line(screen, x1, y1, z1, x0, y0, z0, color)
+        bresenham(x1, y1, z1, x0, y0, z0, do_something)
         return
 
     def z(x, y):
@@ -18,25 +28,24 @@ def draw_line(screen, x0, y0, z0, x1, y1, z1, color):
         else:
             return dot_product([z0, z1], barycentric([[x0, y0], [x1, y1]], [x, y]))
 
-    plotxy = lambda x, y: plot(screen, color, x, y, z(x, y))
+    do_xy = lambda x, y: do_something(x, y, z(x, y))
 
     if dx == 0:
         y = y0
         while y <= y1:
-            # TODO: Get the real z-coordinate
-            plotxy(x0, y)
+            do_xy(x0, y)
             y += 1
     elif dy == 0:
         x = x0
         while x <= x1:
-            plotxy(x, y0)
+            do_xy(x, y0)
             x += 1
     elif dy < 0:
         d = 0
         x = x0
         y = y0
         while x <= x1:
-            plotxy(x, y)
+            do_xy(x, y)
             if d > 0:
                 y -= 1
                 d -= dx
@@ -47,7 +56,7 @@ def draw_line(screen, x0, y0, z0, x1, y1, z1, color):
         x = x0
         y = y0
         while y <= y1:
-            plotxy(x, y)
+            do_xy(x, y)
             if d > 0:
                 x -= 1
                 d -= dy
@@ -58,7 +67,7 @@ def draw_line(screen, x0, y0, z0, x1, y1, z1, color):
         x = x0
         y = y0
         while x <= x1:
-            plotxy(x, y)
+            do_xy(x, y)
             if d > 0:
                 y += 1
                 d -= dx
@@ -69,12 +78,13 @@ def draw_line(screen, x0, y0, z0, x1, y1, z1, color):
         x = x0
         y = y0
         while y <= y1:
-            plotxy(x, y)
+            do_xy(x, y)
             if d > 0:
                 x += 1
                 d -= dy
             y += 1
             d += dx
+
 
 def draw_lines( matrix, screen, color ):
     if len(matrix) == 0:
