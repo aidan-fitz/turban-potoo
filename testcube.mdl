@@ -4,4 +4,4 @@ rotate x 30
 rotate y 20
 box -100 -100 -100 200 200 200
 pop
-save cube.ppm
+save cube.ppm.gz

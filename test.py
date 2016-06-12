@@ -7,4 +7,4 @@ p2 = [150, 100, 105, 1]
 p3 = [150, 200, 100, 1]
 triangle = [p1, p2, p3]
 draw_triangle(triangle, 0, screen, [0, 255, 0], fill=True)
-save_ppm(screen, "test.ppm")
+save_ppm(screen, "test.ppm.gz")
