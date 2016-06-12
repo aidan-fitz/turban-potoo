@@ -11,7 +11,7 @@ from json import dumps as jsonfmt
 
 from math import *
 
-def run(filename):
+def run(filename, frame=-1):
     """
     This function runs an mdl script
     """
@@ -35,12 +35,14 @@ def run(filename):
             #print fmt_string
 
             screen = new_screen()
-            for i in range(frames):
-                print "Drawing frame %d of %d ..." % (i, frames - 1)
-                draw_frame(commands, symbols, screen, knobs, i)
-                save_extension(screen, fmt_string % (i))
 
-            print '''
+            if frame < 0:
+                for i in range(frames):
+                    print "Drawing frame %d of %d ..." % (i, frames - 1)
+                    draw_frame(commands, symbols, screen, knobs, i)
+                    save_extension(screen, fmt_string % (i))
+
+                print '''
 
 
 Done making your animation.
@@ -54,7 +56,11 @@ $ convert %s-*.gif %s.gif && animate -loop 0 %s.gif
 $ animate -loop 0 %s-*.gif
 
 Have a nice day!
-            ''' % (basename, basename, basename, basename)
+                    ''' % (basename, basename, basename, basename)
+            else:
+                print "Drawing frame %d of %d ..." % (frame, frames - 1)
+                draw_frame(commands, symbols, screen, knobs, frame)
+                save_extension(screen, fmt_string % (frame))
         else:
             draw_frame(commands, symbols)
     else:
