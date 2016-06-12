@@ -225,9 +225,7 @@ def vertex_normals(polygons):
     points = set(points_list)
 
     # Next, map the points to the indices of triangles in which they appear
-    points_triangles = {}
-    for p in points:
-        points_triangles[p] = [i - (i % 3) for i, s in enumerate(points_list) if s == p]
+    points_triangles = {p: [i - (i % 3) for i, s in enumerate(points_list) if s == p] for p in points}
 
     # Then, transform the dict by converting each value (list of indices) to the sum of the surface normals
     surface_normals = surface_normals(polygons)
