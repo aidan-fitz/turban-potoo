@@ -1,5 +1,6 @@
 # Image file types
 *.ppm
+*.ppm.gz
 *.jpg
 *.gif
 *.png
