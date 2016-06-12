@@ -142,11 +142,12 @@ def draw_triangle(matrix, index, screen, color, fill=False):
             z = centroid(matrix, index)[2]
 
             L = generate_line(middle, top, generate_line(bottom, top, generate_line(bottom, middle)))
+            print L
 
             for y in range(int(bottom[1]), int(top[1])):
                 # fetch by y-coordinate, then sort by x-coordinate
                 # to get the leftmost and rightmost points
-                foo = sorted([p for p in L if [1] == y])
+                foo = sorted([p for p in L if p[1] == y])
                 print foo
                 draw_line(screen, foo[0], foo[-1], color)
         # Draw the borders last
