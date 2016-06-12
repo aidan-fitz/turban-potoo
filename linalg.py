@@ -2,6 +2,9 @@
 def add(a, b):
     return [a[i] + b[i] for i in range(len(a))]
 
+def vector_sum(L):
+    return reduce(add, L)
+
 def neg(a):
     return [-x for x in a]
 

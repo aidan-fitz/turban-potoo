@@ -193,7 +193,7 @@ def barycentric(vertices, point):
         line_vector = subtract(vertices[1], vertices[0])
         point_vector = subtract(point, vertices[0])
         beta = dot_product(point_vector, line_vector) / dot_product(line_vector, line_vector)
-        return [beta, 1 - beta]
+        return [1 - beta, beta]
     # case 2: triangle
     # algorithm courtesy of Maplesoft: https://www.maplesoft.com/support/help/maple/view.aspx?path=MathApps%2FProjectionOfVectorOntoPlane
     elif len(vertices) == 3:
@@ -203,3 +203,34 @@ def barycentric(vertices, point):
         raise ValueError("I can't find the barycentric coordinates with a point!")
     else:
         raise ValueError("I'm too lazy to find barycentric coordinates with a %d-simplex!" % (len(vertices) - 1))
+
+'''
+Converts an edge or polygon matrix to a list of tuples to be used as set elements or dict keys.
+'''
+def as_tuples(matrix):
+    return [tuple(p[:3]) for p in matrix]
+
+'''
+Creates a sparse list (dict) of polygon matrix indices and their surface normals.
+'''
+def surface_normals(polygons):
+    return {i: surface_normal(polygons, i) for i in range(0, len(polygons), 3)}
+
+'''
+Converts a polygon matrix to a dict of points (as tuples) and their vertex normals.
+'''
+def vertex_normals(polygons):
+    # First, convert the points to tuples
+    points_list = as_tuples(polygons)
+    points = set(points_list)
+
+    # Next, map the points to the indices of triangles in which they appear
+    points_triangles = {}
+    for p in points:
+        points_triangles[p] = [i - (i % 3) for i, s in enumerate(points_list) if s == p]
+
+    # Then, transform the dict by converting each value (list of indices) to the sum of the surface normals
+    surface_normals = surface_normals(polygons)
+
+    # Map triangle indices to their surface normals and sum them
+    return {p: vector_sum( [surface_normals[i] for i in points_triangles[p]] ) for p in points]}
