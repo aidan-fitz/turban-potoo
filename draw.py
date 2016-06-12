@@ -116,7 +116,6 @@ def draw_triangle(matrix, index, screen, color, fill=False):
 
     # Front faces
     if frontness > 0:
-        draw_lines(edges, screen, color)
         # Fill the triangle
         if fill:
             # sort vertices by y-coordinate so we can scanline bottom to top
@@ -149,6 +148,9 @@ def draw_triangle(matrix, index, screen, color, fill=False):
                 draw_line(screen, x0, y, z, x1, y, z, fill_color)
                 x0 += dx0
                 x1 += dx1_lower if y < middle[1] else dx1_upper
+        # Draw the borders last
+        draw_lines(edges, screen, color)
+
 
 def centroid(matrix, index):
     # Shorthand for the three vertices
