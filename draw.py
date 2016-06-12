@@ -11,6 +11,9 @@ def draw_line(screen, p0, p1, color):
 def generate_line(p0, p1, L=[]):
     f = lambda p: L.append( (p[0], p[1], p[2]) )
     bresenham(p0, p1, f)
+    print p0, p1
+    print L
+    print
     return L
 
 def bresenham(p0, p1, operation):
@@ -33,19 +36,19 @@ def bresenham(p0, p1, operation):
     do_xy = lambda x, y: operation((x, y, z_of(x, y) ))
 
     if dx == 0:
-        y = y0
+        y = int(y0)
         while y <= y1:
-            do_xy(x0, y)
+            do_xy(int(x0), y)
             y += 1
     elif dy == 0:
-        x = x0
+        x = int(x0)
         while x <= x1:
-            do_xy(x, y0)
+            do_xy(x, int(y0))
             x += 1
     elif dy < 0:
         d = 0
-        x = x0
-        y = y0
+        x = int(x0)
+        y = int(y0)
         while x <= x1:
             do_xy(x, y)
             if d > 0:
@@ -55,8 +58,8 @@ def bresenham(p0, p1, operation):
             d -= dy
     elif dx < 0:
         d = 0
-        x = x0
-        y = y0
+        x = int(x0)
+        y = int(y0)
         while y <= y1:
             do_xy(x, y)
             if d > 0:
@@ -66,8 +69,8 @@ def bresenham(p0, p1, operation):
             d -= dx
     elif dx > dy:
         d = 0
-        x = x0
-        y = y0
+        x = int(x0)
+        y = int(y0)
         while x <= x1:
             do_xy(x, y)
             if d > 0:
@@ -77,8 +80,8 @@ def bresenham(p0, p1, operation):
             d += dy
     else:
         d = 0
-        x = x0
-        y = y0
+        x = int(x0)
+        y = int(y0)
         while y <= y1:
             do_xy(x, y)
             if d > 0:
@@ -97,8 +100,8 @@ def draw_lines( matrix, screen, color ):
 
     p = 0
     while p < len( matrix ) - 1:
-        draw_line( screen, matrix[p][0], matrix[p][1], matrix[p][2],
-                   matrix[p+1][0], matrix[p+1][1], matrix[p+1][2], color )
+        draw_line( screen, (matrix[p][0], matrix[p][1], matrix[p][2]),
+                   (matrix[p+1][0], matrix[p+1][1], matrix[p+1][2]), color )
         p += 2
 
 def draw_polygons(matrix, screen, color):
@@ -136,11 +139,6 @@ def draw_triangle(matrix, index, screen, color, fill=False):
             middle = vertices[1][:3]
             top    = vertices[2][:3]
 
-            fill_color = [e/2 for e in color]
-
-            # Temporary: Use z-coordinate of centroid for z-buffering
-            z = centroid(matrix, index)[2]
-
             L = generate_line(middle, top, generate_line(bottom, top, generate_line(bottom, middle)))
             print L
 
@@ -150,8 +148,9 @@ def draw_triangle(matrix, index, screen, color, fill=False):
                 foo = sorted([p for p in L if p[1] == y])
                 print foo
                 draw_line(screen, foo[0], foo[-1], color)
-        # Draw the borders last
-        draw_lines(edges, screen, color)
+        else:
+            # Just draw the borders
+            draw_lines(edges, screen, color)
 
 
 def centroid(matrix, index):
