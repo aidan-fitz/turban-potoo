@@ -124,8 +124,16 @@ def draw_triangle(matrix, index, screen, color, fill=False):
             bottom = vertices[0]
             middle = vertices[1]
             top    = vertices[2]
+
+            # Initial x-coordinates
+            x0 = bottom[0]
+            # If there are two bottom vertices, x1 is the other one
+            if bottom[1] == middle[1]:
+                x1 = middle[0]
+            else:
+                x1 = bottom[0]
+
             # calculate dx's
-            x0 = x1 = bottom[0]
             dx = lambda p0, p1: float(p0[0] - p1[0]) / (p0[1] - p1[1]) if p0[1] != p1[1] else 0
             dx0       = dx(bottom, top)
             dx1_lower = dx(bottom, middle)
@@ -138,10 +146,9 @@ def draw_triangle(matrix, index, screen, color, fill=False):
 
             # draw horizontal line segments
             for y in range(int(bottom[1]), int(top[1])):
-                y0 = y1 = y
-                draw_line(screen, x0, y0, z, x1, y1, z, fill_color)
+                draw_line(screen, x0, y, z, x1, y, z, fill_color)
                 x0 += dx0
-                x1 += dx1_lower if y <= middle[1] else dx1_upper
+                x1 += dx1_lower if y < middle[1] else dx1_upper
 
 def centroid(matrix, index):
     # Shorthand for the three vertices
