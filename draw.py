@@ -4,30 +4,33 @@ from math import *
 
 from linalg import *
 
-def draw_line(screen, x0, y0, z0, x1, y1, z1, color):
-    plotxyz = lambda x, y, z: plot(screen, color, x, y, z)
-    bresenham(x0, y0, z0, x1, y1, z1, plotxyz)
+def draw_line(screen, p0, p1, color):
+    plotxyz = lambda p: plot(screen, color, p[0], p[1], p[2])
+    bresenham(p0, p1, plotxyz)
 
-def generate_line(x0, y0, z0, x1, y1, z1, L = []):
-    f = lambda x, y, z: L.append( (x, y, z) )
-    bresenham(x0, y0, z0, x1, y1, z1, f)
+def generate_line(p0, p1, L=[]):
+    f = lambda p: L.append( (p[0], p[1], [2]) )
+    bresenham(p0, p1, f)
     return L
 
-def bresenham(x0, y0, z0, x1, y1, z1, do_something):
+def bresenham(p0, p1, operation):
+    (x0, y0, z0) = p0
+    (x1, y1, z1) = p1
+    
     dx = x1 - x0
     dy = y1 - y0
 
     if dx + dy < 0:
-        bresenham(x1, y1, z1, x0, y0, z0, do_something)
+        bresenham(p1, p0, operation)
         return
 
-    def z(x, y):
+    def z_of(x, y):
         if (x0, y0) == (x1, y1):
             return max(z0, z1)
         else:
             return dot_product([z0, z1], barycentric([[x0, y0], [x1, y1]], [x, y]))
 
-    do_xy = lambda x, y: do_something(x, y, z(x, y))
+    do_xy = lambda x, y: operation(x, y, z_of(x, y))
 
     if dx == 0:
         y = y0
@@ -133,30 +136,16 @@ def draw_triangle(matrix, index, screen, color, fill=False):
             middle = vertices[1]
             top    = vertices[2]
 
-            # Initial x-coordinates
-            x0 = bottom[0]
-            # If there are two bottom vertices, x1 is the other one
-            if bottom[1] == middle[1]:
-                x1 = middle[0]
-            else:
-                x1 = bottom[0]
-
-            # calculate dx's
-            dx = lambda p0, p1: float(p0[0] - p1[0]) / (p0[1] - p1[1]) if p0[1] != p1[1] else 0
-            dx0       = dx(bottom, top)
-            dx1_lower = dx(bottom, middle)
-            dx1_upper = dx(middle, top)
-
             fill_color = [e/2 for e in color]
 
             # Temporary: Use z-coordinate of centroid for z-buffering
             z = centroid(matrix, index)[2]
 
-            # draw horizontal line segments
+            L = generate_line(middle, top, generate_line(bottom, top, generate_line(bottom, middle)))
+
             for y in range(int(bottom[1]), int(top[1])):
-                draw_line(screen, x0, y, z, x1, y, z, fill_color)
-                x0 += dx0
-                x1 += dx1_lower if y < middle[1] else dx1_upper
+                foo = [p for p in L if [1] == y]
+                draw_line(screen, foo[0], foo[1], color)
         # Draw the borders last
         draw_lines(edges, screen, color)
 
