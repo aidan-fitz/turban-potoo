@@ -9,14 +9,14 @@ def draw_line(screen, p0, p1, color):
     bresenham(p0, p1, plotxyz)
 
 def generate_line(p0, p1, L=[]):
-    f = lambda p: L.append( (p[0], p[1], [2]) )
+    f = lambda p: L.append( (p[0], p[1], p[2]) )
     bresenham(p0, p1, f)
     return L
 
 def bresenham(p0, p1, operation):
     (x0, y0, z0) = p0
     (x1, y1, z1) = p1
-    
+
     dx = x1 - x0
     dy = y1 - y0
 
@@ -30,7 +30,7 @@ def bresenham(p0, p1, operation):
         else:
             return dot_product([z0, z1], barycentric([[x0, y0], [x1, y1]], [x, y]))
 
-    do_xy = lambda x, y: operation(x, y, z_of(x, y))
+    do_xy = lambda x, y: operation((x, y, z_of(x, y) ))
 
     if dx == 0:
         y = y0
@@ -132,9 +132,9 @@ def draw_triangle(matrix, index, screen, color, fill=False):
         if fill:
             # sort vertices by y-coordinate so we can scanline bottom to top
             vertices = sorted([p0, p1, p2], key = lambda p: p[1])
-            bottom = vertices[0]
-            middle = vertices[1]
-            top    = vertices[2]
+            bottom = vertices[0][:3]
+            middle = vertices[1][:3]
+            top    = vertices[2][:3]
 
             fill_color = [e/2 for e in color]
 
@@ -147,6 +147,7 @@ def draw_triangle(matrix, index, screen, color, fill=False):
                 # fetch by y-coordinate, then sort by x-coordinate
                 # to get the leftmost and rightmost points
                 foo = sorted([p for p in L if [1] == y])
+                print foo
                 draw_line(screen, foo[0], foo[-1], color)
         # Draw the borders last
         draw_lines(edges, screen, color)
@@ -231,4 +232,4 @@ def vertex_normals(polygons):
     surface_normals = surface_normals(polygons)
 
     # Map triangle indices to their surface normals and sum them
-    return {p: vector_sum( [surface_normals[i] for i in points_triangles[p]] ) for p in points]}
+    return {p: vector_sum( [surface_normals[i] for i in points_triangles[p]] ) for p in points}
