@@ -69,3 +69,6 @@ class Light:
             # Point lights
             for point, colour in self.point_lights:
                 incident_vector = normalize(subtract(point, p))
+                normal = normalize(surface_normal(matrix, index))
+                # Diffuse reflection
+                I[color] += colour[color] * self.get_constant('diffuse', color) * dot_product(incident_vector, normal)
