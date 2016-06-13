@@ -58,7 +58,7 @@ class Light:
     def remove_point_light(self, i):
         return self.point_lights.pop(i)
 
-    def shade(self, matrix, index, mode):
+    def shade(self, matrix, index, mode, view = [0, 0, 1]):
         # Get ambient light
         I = self.ambient_light[:]
         for color in channels:
@@ -71,4 +71,13 @@ class Light:
                 incident_vector = normalize(subtract(point, p))
                 normal = normalize(surface_normal(matrix, index))
                 # Diffuse reflection
-                I[color] += colour[color] * self.get_constant('diffuse', color) * dot_product(incident_vector, normal)
+                cos_t = dot_product(incident_vector, normal)
+                if cos_t > 0:
+                    I[color] += colour[color] * self.get_constant('diffuse', color) * cos_t * cos_t
+                # Specular reflection
+                #project incident_vector onto normal: shortcut
+                reflect = subtract(mult(2*cos_t, normal), incident_vector)
+                cos_a = dot_product(reflect, view)
+                if cos_a > 0:
+                    I[color] += colour[color] * self.get_constant('specular', color) * cos_a * cos_a
+        return I

@@ -11,6 +11,9 @@ def neg(a):
 def subtract(a, b):
     return add(a, neg(b))
 
+def mult(k, a):
+    return [k*x for x in a]
+
 def dot_product(a, b):
     if len(a) == len(b):
         return sum([a[i] * b[i] for i in range(len(a))])
