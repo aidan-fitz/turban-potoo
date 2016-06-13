@@ -37,9 +37,9 @@ def plot( screen, color, x, y, z=0 ):
     # z-buffering
     #print x, newy, screen[x][newy]
     if 0 <= x < XRES and 0 <= newy < YRES:
-        '''oldz = screen[x][newy][Z_INDEX]
-        if z > oldz:'''
-        screen[x][newy] = color[:] + [z]
+        print x, y, z, color
+        if z > screen[x][newy][Z_INDEX]:
+            screen[x][newy] = color[:] + [z]
 
 def clear_screen( screen ):
     for y in range( len(screen) ):
