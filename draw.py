@@ -142,6 +142,11 @@ def draw_triangle(matrix, index, screen, color, fill=False):
             L = generate_line(middle, top, generate_line(bottom, top, generate_line(bottom, middle)))
             #print L
 
+            '''scanlines = scanline(L)
+
+            for p1, p2 in scanlines:
+                draw_line(screen, p1, p2, color)
+                '''
             for y in range(int(bottom[1]), int(top[1])):
                 # fetch by y-coordinate, then sort by x-coordinate
                 # to get the leftmost and rightmost points
@@ -156,6 +161,15 @@ def draw_triangle(matrix, index, screen, color, fill=False):
             # Just draw the borders
             draw_lines(edges, screen, color)
 
+def scanline(points_list):
+    mins = {}
+    maxes = {}
+    for x, y, z in points_list:
+        if x not in mins or y < mins[x][1]:
+            mins[x] = (x, y, z)
+        if x not in maxes or y > maxes[x][1]:
+            maxes[x] = (x, y, z)
+    return [(mins[x], maxes[x]) for x in mins]
 
 def centroid(matrix, index):
     # Shorthand for the three vertices
