@@ -7,7 +7,7 @@ from math import *
 
 from stack import Stack
 
-def parse_file( fname, screen, pen ):
+def parse_file(fname, screen, pen):
     # transformation matrix stack
     stack = Stack()
 

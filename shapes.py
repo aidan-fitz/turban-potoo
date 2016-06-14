@@ -2,13 +2,13 @@ from display import *
 from matrix import *
 from math import *
 
-def add_circle( points, cx, cy, cz, r, step ):
+def add_circle(points, cx, cy, cz, r, step):
     # Find the first point
     x0 = cx + r
     y0 = cy
     t = 0
 
-    tau = 2*pi
+    tau = 2 * pi
     while t < 1 + step:
         # Find the next point
         x1 = cx + r * cos(t * tau)
@@ -23,7 +23,7 @@ def add_circle( points, cx, cy, cz, r, step ):
 HERMITE = 0
 BEZIER = 1
 
-def add_curve( points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type ):
+def add_curve(points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type):
     # Find the first point
     xi = x0
     yi = y0
@@ -48,12 +48,12 @@ def add_curve( points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type ):
 
 # Routines for working with edge matrices
 
-def add_edge( matrix, x0, y0, z0, x1, y1, z1 ):
-    add_point( matrix, x0, y0, z0 )
-    add_point( matrix, x1, y1, z1 )
+def add_edge(matrix, x0, y0, z0, x1, y1, z1):
+    add_point(matrix, x0, y0, z0)
+    add_point(matrix, x1, y1, z1)
 
-def add_point( matrix, x, y, z=0 ):
-    matrix.append( [x, y, z, 1] )
+def add_point(matrix, x, y, z=0):
+    matrix.append([x, y, z, 1])
 
 
 
@@ -86,7 +86,7 @@ class BoxVertices:
             self.i += 1
             return tuple(L)
 
-def add_box( points, x, y, z, width, height, depth ):
+def add_box(points, x, y, z, width, height, depth):
     vertices = list(BoxVertices(x, y, z, width, height, depth))
 
     # indices of faces
@@ -112,7 +112,7 @@ def add_box( points, x, y, z, width, height, depth ):
 # * 1 top row of triangles
 # * 'step - 2' middle rows of quadrilaterals
 # * 1 bottom row of triangles
-def add_sphere( points, cx, cy, cz, r, step ):
+def add_sphere(points, cx, cy, cz, r, step):
     columns = generate_sphere(cx, cy, cz, r, step)
 
     for row, col in [(r, c) for r in range(step) for c in range(step)]:
@@ -144,7 +144,7 @@ def add_sphere( points, cx, cy, cz, r, step ):
 # Generates 'step + 1' rows and 'step' columns of points (an array of 'step' columns)
 # Each column is a semicircle
 # Each row is a circle
-def generate_sphere(cx, cy, cz, r, step ):
+def generate_sphere(cx, cy, cz, r, step):
     points = []
     # cache tau
     tau = 2 * pi
@@ -175,7 +175,7 @@ def generate_sphere(cx, cy, cz, r, step ):
 
 
 # Generates 'step' rows and 'step' columns of quadrilaterals
-def add_torus( points, cx, cy, cz, r, R, step ):
+def add_torus(points, cx, cy, cz, r, R, step):
     rows = generate_torus(cx, cy, cz, r, R, step)
 
     for row, col in [(r, c) for r in range(step) for c in range(step)]:
@@ -192,7 +192,7 @@ def add_torus( points, cx, cy, cz, r, R, step ):
 # Generates 'step' rows and 'step' columns of points (an array of 'step' rows)
 # Each column is a "small" circle
 # Each row is a "big" circle in the yz plane
-def generate_torus(cx, cy, cz, r, R, step ):
+def generate_torus(cx, cy, cz, r, R, step):
     points = []
     # cache tau
     tau = 2 * pi
@@ -221,11 +221,11 @@ def generate_torus(cx, cy, cz, r, R, step ):
 
 # Routines for polygon matrices
 
-def add_triangle( matrix, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
+def add_triangle(matrix, x0, y0, z0, x1, y1, z1, x2, y2, z2):
     add_point(matrix, x0, y0, z0)
     add_point(matrix, x1, y1, z1)
     add_point(matrix, x2, y2, z2)
 
-def add_quad( matrix, x0, y0, z0, x1, y1, z1, x2, y2, z2, x3, y3, z3 ):
+def add_quad(matrix, x0, y0, z0, x1, y1, z1, x2, y2, z2, x3, y3, z3):
     add_triangle(matrix, x0, y0, z0, x1, y1, z1, x2, y2, z2)
     add_triangle(matrix, x2, y2, z2, x3, y3, z3, x0, y0, z0)
