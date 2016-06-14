@@ -198,7 +198,7 @@ def barycentric(vertices, point):
         line_vector = subtract(vertices[1], vertices[0])
         point_vector = subtract(point, vertices[0])
         beta = dot_product(point_vector, line_vector) / dot_product(line_vector, line_vector)
-        return [1 - beta, beta]
+        return [beta, 1 - beta]
     # case 2: triangle
     # algorithm courtesy of Maplesoft: https://www.maplesoft.com/support/help/maple/view.aspx?path=MathApps%2FProjectionOfVectorOntoPlane
     elif len(vertices) == 3:
