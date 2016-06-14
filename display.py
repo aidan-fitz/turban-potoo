@@ -3,22 +3,22 @@
 from subprocess import Popen, PIPE
 from os import remove
 
+
 # CONSTANTS
-# ---------
 
 XRES = 500
 YRES = 500
-MAX_COLOR = 255 # 0-255
+MAX_COLOR = 255
 DEFAULT_COLOR = [0, 0, 0, float("-Inf")]
 
-# the order of indices in a color represented by a list:
+# indices
 RED     = 0
 GREEN   = 1
 BLUE    = 2
 Z_INDEX = 3
 
+
 # FUNCTIONS
-# ---------
 
 def new_screen(width=XRES, height=YRES):
     screen = []
@@ -29,7 +29,7 @@ def new_screen(width=XRES, height=YRES):
             screen[y].append(DEFAULT_COLOR[:])
     return screen
 
-def plot(screen, color, x, y, z=0):
+def plot(screen, color, x, y, z=666):
     #print x, y
     x = int(x)
     y = int(y)
@@ -37,7 +37,7 @@ def plot(screen, color, x, y, z=0):
     # z-buffering
     #print x, newy, screen[x][newy]
     if 0 <= x < XRES and 0 <= newy < YRES:
-        print x, y, z, color
+        print x, y, z, screen[x][newy][Z_INDEX], color
         if z > screen[x][newy][Z_INDEX]:
             screen[x][newy] = color[:] + [z]
 
