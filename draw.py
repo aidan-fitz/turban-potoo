@@ -104,7 +104,7 @@ def draw_lines( matrix, screen, color ):
                    (matrix[p+1][0], matrix[p+1][1], matrix[p+1][2]), color )
         p += 2
 
-def draw_polygons(matrix, screen, color):
+def draw_polygons(matrix, screen, color, light = None):
     if len(matrix) == 0:
         return
 
@@ -112,6 +112,8 @@ def draw_polygons(matrix, screen, color):
         raise ValueError("Need 3 points to draw a triangle")
 
     for p in range(0, len(matrix), 3):
+        if light:
+            color = light.shade(matrix, p)
         draw_triangle(matrix, p, screen, color, fill=True)
 
 def draw_triangle(matrix, index, screen, color, fill=False):

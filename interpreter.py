@@ -6,6 +6,7 @@ from draw import *
 from shapes import *
 from stack import Stack
 from animate import *
+from shading import Light
 
 from json import dumps as jsonfmt
 
@@ -19,6 +20,22 @@ def run(filename, frame=-1):
 
     if p:
         commands, symbols = p
+
+        light = Light()
+        light.set_constant('ambient', RED, 1)
+        light.set_constant('ambient', GREEN, 1)
+        light.set_constant('ambient', BLUE, 1)
+        light.set_constant('diffuse', RED, 1)
+        light.set_constant('diffuse', GREEN, 1)
+        light.set_constant('diffuse', BLUE, 1)
+        light.set_constant('specular', RED, 1)
+        light.set_constant('specular', GREEN, 1)
+        light.set_constant('specular', BLUE, 1)
+        light.normalize_constants()
+
+        light.set_ambient_light([64, 64, 64])
+        light.add_light([-500, 500, 500], [255, 255, 255])
+
         if is_animated(commands):
             frames = num_frames(commands)
 
@@ -39,7 +56,7 @@ def run(filename, frame=-1):
             if frame < 0:
                 for i in range(frames):
                     print "Drawing frame %d of %d ..." % (i, frames - 1)
-                    draw_frame(commands, symbols, screen, knobs, i)
+                    draw_frame(commands, symbols, screen, knobs, light, i)
                     save_extension(screen, fmt_string % (i))
 
                 print '''
@@ -59,17 +76,17 @@ Have a nice day!
                     ''' % (basename, basename, basename, basename)
             else:
                 print "Drawing frame %d of %d ..." % (frame, frames - 1)
-                draw_frame(commands, symbols, screen, knobs, frame)
+                draw_frame(commands, symbols, screen, knobs, light, frame)
                 save_extension(screen, fmt_string % (frame))
         else:
-            draw_frame(commands, symbols)
+            draw_frame(commands, symbols, light=light)
     else:
         print "Parsing failed."
         return
 
 
 # Draw ONE frame
-def draw_frame(commands, symbols, screen = None, knobs = None, frame = 0, verbose = False):
+def draw_frame(commands, symbols, screen = None, knobs = None, frame = 0, light = None, verbose = False):
     # Setup drawing environment *after* the error checking to prevent prematurely allocating too much memory
     color = [255, 255, 255]
     stack = Stack()
@@ -79,7 +96,7 @@ def draw_frame(commands, symbols, screen = None, knobs = None, frame = 0, verbos
     else:
         screen = new_screen()
 
-    env = (color, stack, screen, symbols, knobs, frame)
+    env = (color, stack, screen, symbols, knobs, frame, light)
 
     # Pick a function to execute from the dict(string, function)
     x_map = {
@@ -142,44 +159,44 @@ def bezier(args, env):
 
 def box(args, env):
     x, y, z, width, height, depth = args[1:]
-    color, stack, screen, symbols, knobs, frame = env
+    color, stack, screen, symbols, knobs, frame, light = env
 
     polygons = []
     add_box(polygons, x, y, z, width, height, depth)
     mmult(stack.peek(), polygons)
-    draw_polygons(polygons, screen, color)
+    draw_polygons(polygons, screen, color, light)
 
 def sphere(args, env):
     x, y, z, r, coord_system = args[1:]
 
-    color, stack, screen, symbols, knobs, frame = env
+    color, stack, screen, symbols, knobs, frame, light = env
     step = int(round(2 * sqrt(r)))
 
     polygons = []
     add_sphere(polygons, x, y, z, r, step)
     mmult(stack.peek() if coord_system is None else coord_system, polygons)
-    draw_polygons(polygons, screen, color)
+    draw_polygons(polygons, screen, color, light)
 
 def torus(args, env):
     x, y, z, r, R, coord_system = args[1:]
-    color, stack, screen, symbols, knobs, frame = env
+    color, stack, screen, symbols, knobs, frame, light = env
     step = int(round(4 * sqrt(r)))
 
     polygons = []
     add_torus(polygons, x, y, z, r, R, step)
     mmult(stack.peek() if coord_system is None else coord_system, polygons)
-    draw_polygons(polygons, screen, color)
+    draw_polygons(polygons, screen, color, light)
 
 
 # Matrix stack operations
 
 def push(args, env):
-    color, stack, screen, symbols, knobs, frame = env
+    color, stack, screen, symbols, knobs, frame, light = env
 
     stack.push()
 
 def pop(args, env):
-    color, stack, screen, symbols, knobs, frame = env
+    color, stack, screen, symbols, knobs, frame, light = env
 
     stack.pop()
 
@@ -187,7 +204,7 @@ def pop(args, env):
 
 def move(args, env):
     x, y, z, knob = args[1:]
-    color, stack, screen, symbols, knobs, frame = env
+    color, stack, screen, symbols, knobs, frame, light = env
 
     c = knobs[knob][frame] if knobs and knob else 1
 
@@ -196,7 +213,7 @@ def move(args, env):
 
 def scale(args, env):
     x, y, z, knob = args[1:]
-    color, stack, screen, symbols, knobs, frame = env
+    color, stack, screen, symbols, knobs, frame, light = env
 
     c = knobs[knob][frame] if knobs and knob else 1
 
@@ -205,7 +222,7 @@ def scale(args, env):
 
 def rotate(args, env):
     axis, degrees, knob = args[1:]
-    color, stack, screen, symbols, knobs, frame = env
+    color, stack, screen, symbols, knobs, frame, light = env
 
     rot = {
         "x": make_rotX,
@@ -221,7 +238,7 @@ def rotate(args, env):
 # Display and save
 
 def display_img(args, env):
-    color, stack, screen, symbols, knobs, frame = env
+    color, stack, screen, symbols, knobs, frame, light = env
     display(screen)
 
 def save_img(args, env):

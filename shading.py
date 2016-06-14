@@ -1,12 +1,5 @@
 from draw import *
 
-I_a = [40, 12, 35]
-I_d = [200, 90, 60]
-I_s = [0, 80, 40]
-
-I = vector_sum(I_a, I_d, I_s)
-
-
 class Light:
     channels = [RED, GREEN, BLUE]
     refl_types = ['ambient', 'diffuse', 'specular']
@@ -34,10 +27,10 @@ class Light:
         self.constants[refl_type][color] = value
 
     def normalize_constants(self):
-        for color in channels:
-            S = sum(map(lambda refl: self.get_constant(refl, color), refl_types))
+        for color in Light.channels:
+            S = sum(map(lambda refl: self.get_constant(refl, color), Light.refl_types))
             if S > 1:
-                for refl_type in refl_types:
+                for refl_type in Light.refl_types:
                     self.constants[refl_type][color] /= S
 
     def add_light(self, point, color):
@@ -58,10 +51,10 @@ class Light:
     def remove_point_light(self, i):
         return self.point_lights.pop(i)
 
-    def shade(self, matrix, index, mode, view = [0, 0, 1]):
+    def shade(self, matrix, index, mode=FLAT, view = [0, 0, 1]):
         # Get ambient light
         I = self.ambient_light[:]
-        for color in channels:
+        for color in Light.channels:
             # Multiply by ambient reflection constants
             I[color] *= self.get_constant('ambient', color)
 
