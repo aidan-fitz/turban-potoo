@@ -16,4 +16,4 @@ tri2 = [p4, p5, p6]
 draw_triangle(tri2, 0, screen, [255, 0, 0], fill=True)
 draw_triangle(tri1, 0, screen, [0, 0, 255], fill=True)
 
-save_ppm(screen, "test.ppm.gz")
+save_extension(screen, "test.ppm.gz")
