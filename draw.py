@@ -112,9 +112,11 @@ def draw_polygons(matrix, screen, color, light = None):
         raise ValueError("Need 3 points to draw a triangle")
 
     for p in range(0, len(matrix), 3):
-        if light:
-            color = light.shade(matrix, p)
-        draw_triangle(matrix, p, screen, color, fill=True)
+        if magnitude(surface_normal(matrix, p)):
+            if light:
+                color = light.shade(matrix, p)
+                print color
+            draw_triangle(matrix, p, screen, color, fill=True)
 
 def draw_triangle(matrix, index, screen, color, fill=False):
     # Shorthand for the three vertices

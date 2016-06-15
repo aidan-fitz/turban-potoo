@@ -37,7 +37,7 @@ def plot(screen, color, x, y, z=666):
     # z-buffering
     #print x, newy, screen[x][newy]
     if 0 <= x < XRES and 0 <= newy < YRES:
-        print x, y, z, screen[x][newy][Z_INDEX], color
+        #print x, y, z, screen[x][newy][Z_INDEX], color
         if z > screen[x][newy][Z_INDEX]:
             screen[x][newy] = color[:] + [z]
 

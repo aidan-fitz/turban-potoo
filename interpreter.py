@@ -56,7 +56,7 @@ def run(filename, frame=-1):
             if frame < 0:
                 for i in range(frames):
                     print "Drawing frame %d of %d ..." % (i, frames - 1)
-                    draw_frame(commands, symbols, screen, knobs, light, i)
+                    draw_frame(commands, symbols, screen, knobs, light=light, frame=i)
                     save_extension(screen, fmt_string % (i))
 
                 print '''
@@ -76,7 +76,7 @@ Have a nice day!
                     ''' % (basename, basename, basename, basename)
             else:
                 print "Drawing frame %d of %d ..." % (frame, frames - 1)
-                draw_frame(commands, symbols, screen, knobs, light, frame)
+                draw_frame(commands, symbols, screen, knobs, light=light, frame=frame)
                 save_extension(screen, fmt_string % (frame))
         else:
             draw_frame(commands, symbols, light=light)
@@ -97,6 +97,7 @@ def draw_frame(commands, symbols, screen = None, knobs = None, frame = 0, light 
         screen = new_screen()
 
     env = (color, stack, screen, symbols, knobs, frame, light)
+    #print [type(o) for o in env]
 
     # Pick a function to execute from the dict(string, function)
     x_map = {
@@ -175,6 +176,7 @@ def sphere(args, env):
     polygons = []
     add_sphere(polygons, x, y, z, r, step)
     mmult(stack.peek() if coord_system is None else coord_system, polygons)
+
     draw_polygons(polygons, screen, color, light)
 
 def torus(args, env):
@@ -213,9 +215,17 @@ def move(args, env):
 
 def scale(args, env):
     x, y, z, knob = args[1:]
+    #print "knob", type(knob)
+
     color, stack, screen, symbols, knobs, frame, light = env
 
-    c = knobs[knob][frame] if knobs and knob else 1
+    #print "knobs", type(knobs)
+    #print jsonfmt(knobs, indent=4)
+    #print knobs['bigenator']
+    #print frame, type(frame)
+
+    knob_content = knobs[knob] if knobs and knob else None
+    c = knob_content[frame] if knob_content else 1
 
     u = make_scale(x*c, y*c, z*c)
     stack.mult(u)
@@ -243,7 +253,7 @@ def display_img(args, env):
 
 def save_img(args, env):
     filename = args[1]
-    color, stack, screen, symbols, knobs, frame = env
+    color, stack, screen, symbols, knobs, frame, light = env
 
     if filename is not None:
         if filename[-4:].lower() == ".ppm":
