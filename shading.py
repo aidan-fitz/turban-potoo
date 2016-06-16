@@ -28,7 +28,9 @@ class Light:
 
     def normalize_constants(self):
         for color in Light.channels:
-            S = sum(map(lambda refl: self.get_constant(refl, color), Light.refl_types))
+            # careful to use floats!!!
+            S = float(sum(map(lambda refl: self.get_constant(refl, color), Light.refl_types)))
+            #print color, 'sum = ', S
             if S > 1:
                 for refl_type in Light.refl_types:
                     self.constants[refl_type][color] /= S
@@ -54,9 +56,11 @@ class Light:
     def shade(self, matrix, index, mode=FLAT, view = [0, 0, 1]):
         # Get ambient light
         I = self.ambient_light[:]
+        #print "ambient light:", I
         for color in Light.channels:
             # Multiply by ambient reflection constants
             I[color] *= self.get_constant('ambient', color)
+            #print 'mult by ambient constant:', I
 
             p = centroid(matrix, index)
             # Point lights
@@ -67,10 +71,13 @@ class Light:
                 cos_t = dot_product(incident_vector, normal)
                 if cos_t > 0:
                     I[color] += colour[color] * self.get_constant('diffuse', color) * cos_t * cos_t
+                #print '+ diffuse light:', I
                 # Specular reflection
                 #project incident_vector onto normal: shortcut
                 reflect = subtract(mult(2*cos_t, normal), incident_vector)
                 cos_a = dot_product(reflect, view)
                 if cos_a > 0:
                     I[color] += colour[color] * self.get_constant('specular', color) * cos_a * cos_a
-        return I
+                #print '+ specular light:', I
+        # cast back to integers
+        return [int(v) for v in I]

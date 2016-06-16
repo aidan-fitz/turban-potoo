@@ -115,7 +115,7 @@ def draw_polygons(matrix, screen, color, light = None):
         if magnitude(surface_normal(matrix, p)):
             if light:
                 color = light.shade(matrix, p)
-                print color
+                #print color
             draw_triangle(matrix, p, screen, color, fill=True)
 
 def draw_triangle(matrix, index, screen, color, fill=False):
